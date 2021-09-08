@@ -57,10 +57,12 @@ import Test1036 from './src/Test1036';
 import Test1072 from './src/Test1072';
 import Test1084 from './src/Test1084';
 
+import Issue998 from './src/Issue998';
+
 export default function App() {
   return (
     <ReanimatedScreenProvider>
-      <Test42 />
+      <Issue998 />
     </ReanimatedScreenProvider>
   );
 }
