@@ -26,7 +26,10 @@ function AccessibleHeaderRight() {
 
 function AccessibleHeaderCenter() {
   return (
-    <Text accessible accessibilityRole="header" accessibilityLabel="Center label">
+    <Text
+      accessible
+      accessibilityRole="header"
+      accessibilityLabel="Center label">
       Center
     </Text>
   );
@@ -36,14 +39,27 @@ export default function App() {
   return (
     <View style={{flex: 1, paddingBottom: 200}}>
       <NavigationContainer>
-        <Stack.Navigator
-          screenOptions={{
-            headerLeft: AccessibleHeaderLeft,
-            headerCenter: AccessibleHeaderCenter,
-            headerRight: AccessibleHeaderRight,
-            stackPresentation: 'fullScreenModal',
-          }}>
-          <Stack.Screen name="Top" component={First} />
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Top"
+            component={First}
+            options={{
+              headerLeft: AccessibleHeaderLeft,
+              headerCenter: AccessibleHeaderCenter,
+              headerRight: AccessibleHeaderRight,
+              stackPresentation: 'fullScreenModal',
+            }}
+          />
+          <Stack.Screen
+            name="Second"
+            component={Second}
+            options={{
+              headerLeft: AccessibleHeaderLeft,
+              headerCenter: AccessibleHeaderCenter,
+              headerRight: AccessibleHeaderRight,
+              stackPresentation: 'fullScreenModal',
+            }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </View>
@@ -59,7 +75,22 @@ function First({
     <View style={{backgroundColor: '#FFF'}}>
       <Button
         title="Tap me for second screen"
-        onPress={() => navigation.push('Top1')}
+        onPress={() => navigation.push('Second')}
+      />
+    </View>
+  );
+}
+
+function Second({
+  navigation,
+}: {
+  navigation: NativeStackNavigationProp<ParamListBase>;
+}) {
+  return (
+    <View style={{backgroundColor: '#FFF'}}>
+      <Button
+        title="Tap me to go back"
+        onPress={() => navigation.push('Top')}
       />
     </View>
   );
