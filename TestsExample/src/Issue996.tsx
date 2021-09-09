@@ -17,7 +17,14 @@ export default function App() {
             name="First"
             component={First}
             options={{
-              searchBar: {},
+              searchBar: {
+                placeholder: 'Interesting places...',
+                obscureBackground: false,
+                autoCapitalize: 'none',
+                onBlur: () => {
+                  console.log('Blur');
+                },
+              },
             }}
           />
           <Stack.Screen
@@ -25,6 +32,10 @@ export default function App() {
             component={Second}
             options={{
               headerShown: false,
+              searchBar: {
+                hideNavigationBar: true,
+              },
+              headerLeft: () => null,
             }}
           />
         </Stack.Navigator>
