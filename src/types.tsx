@@ -367,6 +367,8 @@ export interface ScreenStackHeaderConfigProps extends ViewProps {
 }
 
 export interface SearchBarProps {
+  keepSearchText?: boolean;
+  searchText?: string;
   /**
    * The auto-capitalization behavior
    */

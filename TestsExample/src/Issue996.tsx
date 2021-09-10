@@ -9,6 +9,8 @@ import {
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  const currentText = React.useRef('');
+  const [searchText, setSearchText] = React.useState(currentText.current);
   return (
     <View style={{flex: 1}}>
       <NavigationContainer>
@@ -18,11 +20,17 @@ export default function App() {
             component={First}
             options={{
               searchBar: {
+                keepSearchText: true,
+                searchText,
                 placeholder: 'Interesting places...',
                 obscureBackground: false,
                 autoCapitalize: 'none',
                 onBlur: () => {
                   console.log('Blur');
+                  setSearchText(currentText.current);
+                },
+                onChangeText: (e) => {
+                  currentText.current = e.nativeEvent.text;
                 },
               },
             }}
@@ -32,10 +40,6 @@ export default function App() {
             component={Second}
             options={{
               headerShown: false,
-              searchBar: {
-                hideNavigationBar: true,
-              },
-              headerLeft: () => null,
             }}
           />
         </Stack.Navigator>
@@ -53,7 +57,9 @@ function First({
     <View style={{backgroundColor: '#000', flex: 1, justifyContent: 'center'}}>
       <Button
         title="Tap me for second screen"
-        onPress={() => navigation.push('Second')}
+        onPress={() => {
+          navigation.push('Second');
+        }}
       />
     </View>
   );
@@ -64,9 +70,21 @@ function Second({
 }: {
   navigation: NativeStackNavigationProp<ParamListBase>;
 }) {
+  React.useEffect(() => {
+    navigation.setOptions({headerShown: false});
+  }, []);
   return (
     <View style={{backgroundColor: '#333', flex: 1, justifyContent: 'center'}}>
-      <Button title="Tap me to go back" onPress={() => navigation.pop()} />
+      <Button
+        title="Tap me to go back"
+        onPress={() => {
+          navigation.pop();
+        }}
+      />
+      <Button
+        title="Open this screen again"
+        onPress={() => navigation.push('Second')}
+      />
     </View>
   );
 }

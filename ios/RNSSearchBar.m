@@ -10,6 +10,7 @@
   __weak RCTBridge *_bridge;
   UISearchController *_controller;
   UIColor *_textColor;
+  BOOL _keepSearchText;
 }
 
 @synthesize controller = _controller;
@@ -21,6 +22,7 @@
     _controller = [UISearchController new];
     _controller.searchBar.delegate = self;
     _hideWhenScrolling = YES;
+    _keepSearchText = NO;
   }
   return self;
 }
@@ -78,6 +80,18 @@
   [_controller.searchBar setValue:text forKey:@"cancelButtonText"];
 }
 
+- (void)setKeepSearchText:(NSString *)keepSearchText
+{
+  _keepSearchText = keepSearchText;
+}
+
+- (void)setSearchText:(NSString *)searchText
+{
+  if (_keepSearchText) {
+    _controller.searchBar.text = searchText;
+  }
+}
+
 - (void)hideCancelButton
 {
 #if !TARGET_OS_TV
@@ -129,6 +143,9 @@
 {
   if (self.onBlur) {
     self.onBlur(@{});
+  }
+  if (_keepSearchText) {
+    _controller.active = NO;
   }
   [self hideCancelButton];
 }
@@ -188,6 +205,8 @@ RCT_EXPORT_VIEW_PROPERTY(placeholder, NSString)
 RCT_EXPORT_VIEW_PROPERTY(barTintColor, UIColor)
 RCT_EXPORT_VIEW_PROPERTY(textColor, UIColor)
 RCT_EXPORT_VIEW_PROPERTY(cancelButtonText, NSString)
+RCT_EXPORT_VIEW_PROPERTY(searchText, NSString)
+// RCT_EXPORT_VIEW_PROPERTY(keepSearchText, BOOL)
 
 RCT_EXPORT_VIEW_PROPERTY(onChangeText, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onCancelButtonPress, RCTBubblingEventBlock)
