@@ -70,9 +70,6 @@ function Second({
 }: {
   navigation: NativeStackNavigationProp<ParamListBase>;
 }) {
-  React.useEffect(() => {
-    navigation.setOptions({headerShown: false});
-  }, []);
   return (
     <View style={{backgroundColor: '#333', flex: 1, justifyContent: 'center'}}>
       <Button
