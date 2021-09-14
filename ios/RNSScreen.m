@@ -552,6 +552,14 @@
 {
   [super viewWillAppear:animated];
 
+  double delayInSeconds = 0.01;
+  dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+  dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
+    if (!_gestureEnabled) {
+      [self.navigationController setNavigationBarHidden:YES animated:NO];
+    }
+  });
+
   if (!_isSwiping) {
     [((RNSScreenView *)self.view) notifyWillAppear];
     if (self.transitionCoordinator.isInteractive) {
