@@ -65,6 +65,7 @@ typedef NS_ENUM(NSInteger, RNSWindowTrait) {
 
 - (instancetype)initWithView:(UIView *)view;
 - (void)notifyFinishTransitioning;
+- (void)setHasHeader:(BOOL)hasHeader;
 
 @end
 

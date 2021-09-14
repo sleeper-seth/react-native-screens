@@ -169,6 +169,7 @@
 #endif
 
   _gestureEnabled = gestureEnabled;
+  [_controller setHasHeader:gestureEnabled];
 }
 
 - (void)setReplaceAnimation:(RNSScreenReplaceAnimation)replaceAnimation
@@ -381,6 +382,7 @@
   int _dismissCount;
   BOOL _isSwiping;
   BOOL _shouldNotify;
+  BOOL _hasHeader;
 }
 
 - (instancetype)initWithView:(UIView *)view
@@ -389,6 +391,7 @@
     self.view = view;
     _shouldNotify = YES;
     _fakeView = [UIView new];
+    _hasHeader = YES;
   }
   return self;
 }
@@ -548,17 +551,22 @@
   }
 }
 
+- (void)setHasHeader:(BOOL)hasHeader
+{
+  _hasHeader = hasHeader;
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
   [super viewWillAppear:animated];
 
-  double delayInSeconds = 0.01;
-  dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-  dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
-    if (!_gestureEnabled) {
+  if (!_hasHeader) {
+    double delayInSeconds = 0.01;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
       [self.navigationController setNavigationBarHidden:YES animated:NO];
-    }
-  });
+    });
+  }
 
   if (!_isSwiping) {
     [((RNSScreenView *)self.view) notifyWillAppear];
