@@ -1,12 +1,17 @@
 import * as React from 'react';
-import {Button, View} from 'react-native';
+import {Button, View, Text} from 'react-native';
 import {NavigationContainer, ParamListBase} from '@react-navigation/native';
 import {
   createNativeStackNavigator,
   NativeStackNavigationProp,
 } from 'react-native-screens/native-stack';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const Stack = createNativeStackNavigator();
+
+function headerLeft() {
+  return <Text>1</Text>;
+}
 
 export default function App() {
   return (
@@ -18,22 +23,15 @@ export default function App() {
             component={First}
             options={{
               gestureEnabled: true,
-              searchBar: {
-                placeholder: 'Interesting places...',
-                obscureBackground: false,
-                autoCapitalize: 'none',
-                onBlur: () => {
-                  console.log('Blur');
-                },
-              },
             }}
           />
           <Stack.Screen
             name="Second"
             component={Second}
             options={{
-              headerShown: false,
-              gestureEnabled: false,
+              headerShown: true,
+              disableBackButtonMenu: true,
+              headerLeft,
             }}
           />
         </Stack.Navigator>
@@ -47,14 +45,45 @@ function First({
 }: {
   navigation: NativeStackNavigationProp<ParamListBase>;
 }) {
+  const [addPadding, setAddPadding] = React.useState(true);
+  const [isFocused, setIsFocused] = React.useState(false);
+  React.useEffect(() => {
+    navigation.setOptions({
+      searchBar: {
+        onCancelButtonPress: () => {
+          setIsFocused(false);
+        },
+        onFocus: () => {
+          console.log('Focus')
+          setIsFocused(true);
+        },
+        placeholder: 'Interesting places...',
+        obscureBackground: false,
+        autoCapitalize: 'none',
+      },
+    });
+  }, []);
+  navigation.addListener('transitionStart', () => {
+    if (isFocused) setAddPadding(true);
+  });
+  navigation.addListener('appear', () => {
+    setAddPadding(false);
+  });
   return (
-    <View style={{backgroundColor: '#000', flex: 1, justifyContent: 'center'}}>
-      <Button
-        title="Tap me for second screen"
-        onPress={() => {
-          navigation.push('Second');
-        }}
-      />
+    <View
+      style={{
+        backgroundColor: '#000',
+        flex: 1,
+        paddingTop: addPadding ? 99 : 0,
+      }}>
+      <SafeAreaView>
+        <Button
+          title="Tap me for second screen"
+          onPress={() => {
+            navigation.push('Second');
+          }}
+        />
+      </SafeAreaView>
     </View>
   );
 }
@@ -64,11 +93,8 @@ function Second({
 }: {
   navigation: NativeStackNavigationProp<ParamListBase>;
 }) {
-  React.useEffect(() => {
-    navigation.setOptions({headerShown: false});
-  }, []);
   return (
-    <View style={{backgroundColor: '#333', flex: 1, justifyContent: 'center'}}>
+    <View style={{backgroundColor: '#777', flex: 1, justifyContent: 'center'}}>
       <Button
         title="Tap me to go back"
         onPress={() => {
